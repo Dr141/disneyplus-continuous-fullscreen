@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Disney+ Continuous Fullscreen</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="header">
+    <div class="logo-area">
+      <img class="icon-badge" src="../../icons/icon48.png" alt="Logo">
+      <div class="titles">
+        <h1>Disney+ Fullscreen</h1>
+        <span class="subtitle">Modo Contínuo Ativo</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="option-row">
+      <div class="option-info">
+        <label for="continuousFullscreen">Tela Cheia Contínua</label>
+        <span class="desc">Impede que o player saia de tela cheia no próximo episódio</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="continuousFullscreen">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="option-row">
+      <div class="option-info">
+        <label for="enableKeyF">Atalho Tecla "F"</label>
+        <span class="desc">Pressione a tecla F para alternar tela cheia</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="enableKeyF">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="option-row">
+      <div class="option-info">
+        <label for="enableDblClick">Duplo Clique no Vídeo</label>
+        <span class="desc">Dois cliques rápidos no vídeo para tela cheia</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="enableDblClick">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="option-row">
+      <div class="option-info">
+        <label for="hideCursorOnIdle">Ocultar Cursor Inativo (3s)</label>
+        <span class="desc">Oculta a seta do mouse após 3 segundos sem mexer</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="hideCursorOnIdle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="option-row">
+      <div class="option-info">
+        <label for="autoSkipIntro">Pular Abertura e Introdução</label>
+        <span class="desc">Clica automaticamente em "Pular Abertura" e "Resumo"</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="autoSkipIntro">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="status-indicator"></span>
+    <span class="status-text">Pronto para maratonar séries</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

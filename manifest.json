@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "Disney+ Continuous Fullscreen",
+  "version": "1.0.0",
+  "description": "Mantém séries em tela cheia ininterrupta ao passar para o próximo episódio no Disney+.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://*.disneyplus.com/*"
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.disneyplus.com/*"
+      ],
+      "js": [
+        "src/content/inject.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://*.disneyplus.com/*"
+      ],
+      "js": [
+        "src/content/content.js"
+      ],
+      "css": [
+        "src/content/styles.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "Disney+ Continuous Fullscreen"
+  }
+}
