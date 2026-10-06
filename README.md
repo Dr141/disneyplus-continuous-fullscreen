@@ -28,7 +28,7 @@ No Disney+, quando um episódio acaba:
 4. No canto superior esquerdo, clique no botão **"Carregar sem compactação"** (Load unpacked).
 5. Selecione a pasta onde os arquivos estão localizados:
    ```
-   C:\Users\lira_\Documents\Extesao
+   C:\Users\seu_usuario\Documents\Extensões
    ```
 6. A extensão **Disney+ Continuous Fullscreen** aparecerá na sua lista de extensões ativas.
 
@@ -59,7 +59,7 @@ No Disney+, quando um episódio acaba:
 ## 📁 Estrutura de Arquivos
 
 ```
-Extesao/
+Extensão/
 ├── manifest.json              # Configuração Manifest V3
 ├── icons/                     # Ícones da extensão (16, 48, 128)
 ├── src/
