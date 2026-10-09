@@ -1,7 +1,7 @@
 {
   "name": "disneyplus-continuous-fullscreen",
   "displayName": "Disney+ Continuous Fullscreen",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Extensão para o Google Chrome que mantém séries em tela cheia contínua entre episódios, pula aberturas e oculta o cursor inativo no Disney+.",
   "scripts": {
     "package": "powershell -Command \"Compress-Archive -Path manifest.json, icons, src -DestinationPath disneyplus-continuous-fullscreen.zip -Force\""

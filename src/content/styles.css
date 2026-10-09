@@ -1,16 +1,17 @@
 /* ==========================================================================
    Disney+ Continuous Fullscreen Styles
    Garante que o elemento de vídeo e os controles preencham a tela toda
-   quando document.documentElement estiver em fullscreen.
+   quando document.documentElement estiver em fullscreen no Disney+.
+   O escopo .dplus-active garante isolamento total de outros sites.
    ========================================================================== */
 
-:root:fullscreen {
+:root.dplus-active:fullscreen {
   background-color: #000000 !important;
   overflow: hidden !important;
 }
 
 /* O elemento de vídeo deve sempre preencher a viewport inteira */
-:root:fullscreen video {
+:root.dplus-active:fullscreen video {
   width: 100vw !important;
   height: 100vh !important;
   max-width: 100vw !important;
@@ -24,11 +25,11 @@
 }
 
 /* Containers principais do player do Disney+ */
-:root:fullscreen .btm-media-client,
-:root:fullscreen [data-testid="video-player"],
-:root:fullscreen [data-testid="playback-container"],
-:root:fullscreen .web-player,
-:root:fullscreen .player-container {
+:root.dplus-active:fullscreen .btm-media-client,
+:root.dplus-active:fullscreen [data-testid="video-player"],
+:root.dplus-active:fullscreen [data-testid="playback-container"],
+:root.dplus-active:fullscreen .web-player,
+:root.dplus-active:fullscreen .player-container {
   width: 100vw !important;
   height: 100vh !important;
   max-width: 100vw !important;
@@ -41,28 +42,28 @@
 }
 
 /* Controles de reprodução e barra de progresso */
-:root:fullscreen .controls-container,
-:root:fullscreen [data-testid="player-controls"],
-:root:fullscreen .bottom-controls,
-:root:fullscreen .top-controls {
+:root.dplus-active:fullscreen .controls-container,
+:root.dplus-active:fullscreen [data-testid="player-controls"],
+:root.dplus-active:fullscreen .bottom-controls,
+:root.dplus-active:fullscreen .top-controls {
   z-index: 2147483646 !important;
 }
 
 /* Overlays de 'Próximo Episódio' e contagem regressiva */
-:root:fullscreen [data-testid="up-next-overlay"],
-:root:fullscreen [data-testid="overlay-container"],
-:root:fullscreen .up-next-container,
-:root:fullscreen .skip-overlay {
+:root.dplus-active:fullscreen [data-testid="up-next-overlay"],
+:root.dplus-active:fullscreen [data-testid="overlay-container"],
+:root.dplus-active:fullscreen .up-next-container,
+:root.dplus-active:fullscreen .skip-overlay {
   z-index: 2147483645 !important;
 }
 
 /* Ocultar barras de rolagem globais durante a reprodução */
-:root:fullscreen body {
+:root.dplus-active:fullscreen body {
   overflow: hidden !important;
 }
 
 /* Ocultar cursor após 3 segundos de inatividade */
-:root.dplus-cursor-hidden,
-:root.dplus-cursor-hidden * {
+:root.dplus-active.dplus-cursor-hidden,
+:root.dplus-active.dplus-cursor-hidden * {
   cursor: none !important;
 }

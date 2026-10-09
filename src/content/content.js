@@ -9,6 +9,20 @@
 (function () {
   'use strict';
 
+  // Validação estrita de domínio: garante execução exclusiva no Disney+
+  function isDisneyPlusDomain() {
+    const hostname = window.location.hostname.toLowerCase();
+    return hostname === 'disneyplus.com' || hostname.endsWith('.disneyplus.com');
+  }
+
+  // Aborta imediatamente se não estiver no domínio oficial do Disney+
+  if (!isDisneyPlusDomain()) {
+    return;
+  }
+
+  // Adiciona classe de escopo na raiz para que o styles.css funcione exclusivamente nesta extensão no Disney+
+  document.documentElement.classList.add('dplus-active');
+
   // Configurações padrão
   let settings = {
     continuousFullscreen: true,
@@ -55,11 +69,14 @@
 
   loadSettings();
 
-  // Verifica se o usuário está assistindo a um vídeo
+  // Verifica se o usuário está assistindo a um vídeo no Disney+
   function isPlaybackRoute() {
-    return window.location.pathname.includes('/play/') ||
-           window.location.pathname.includes('/video/') ||
-           !!document.querySelector('video');
+    if (!isDisneyPlusDomain()) return false;
+    const path = window.location.pathname;
+    const isPlayerPath = path.includes('/play/') || path.includes('/video/');
+    const hasPlayerElement = !!document.querySelector('.btm-media-client, [data-testid="video-player"], [data-testid="playback-container"], .web-player');
+    const hasVideo = !!document.querySelector('video');
+    return isPlayerPath || (hasPlayerElement && hasVideo);
   }
 
   // Alterna tela cheia
@@ -187,7 +204,7 @@
   let lastSkipTime = 0;
 
   function checkAndSkipIntro() {
-    if (!settings.autoSkipIntro || !isPlaybackRoute()) return;
+    if (!isDisneyPlusDomain() || !settings.autoSkipIntro || !isPlaybackRoute()) return;
 
     const now = Date.now();
     // Previne cliques repetidos em rajada dentro de 1.5s
@@ -225,8 +242,10 @@
       }
     }
 
-    // 2. Busca por texto dentro de botões visíveis
-    const candidateButtons = document.querySelectorAll('button, [role="button"]');
+    // 2. Busca restrita aos botões do player de vídeo
+    const playerContainer = document.querySelector('.btm-media-client, [data-testid="video-player"], [data-testid="playback-container"], .web-player, .player-container') || document.body;
+    const candidateButtons = playerContainer ? playerContainer.querySelectorAll('button, [role="button"]') : [];
+
     for (const btn of candidateButtons) {
       if (btn.offsetParent === null) continue;
 
@@ -234,20 +253,28 @@
       const aria = (btn.getAttribute('aria-label') || '').trim().toLowerCase();
       const combined = `${text} ${aria}`;
 
-      // Evita botão de próximo episódio
-      if (combined.includes('próximo') || combined.includes('proximo') || combined.includes('next episode')) {
+      // Evita botão de próximo episódio ou controles de reprodução comuns
+      if (
+        combined.includes('próximo') ||
+        combined.includes('proximo') ||
+        combined.includes('next episode') ||
+        combined.includes('play') ||
+        combined.includes('pause')
+      ) {
         continue;
       }
 
+      // Procura especificamente por expressões claras de pular abertura/resumo (evitando palavras soltas genéricas como "resumo" de carrinho/pedido)
       const isIntroOrRecap =
-        combined.includes('abertura') ||
-        combined.includes('introdução') ||
-        combined.includes('introducao') ||
-        combined.includes('intro') ||
-        combined.includes('recap') ||
-        combined.includes('resumo') ||
-        combined.includes('recapitulação') ||
-        combined.includes('recapitulacao') ||
+        combined.includes('pular abertura') ||
+        combined.includes('pular introdução') ||
+        combined.includes('pular introducao') ||
+        combined.includes('pular resumo') ||
+        combined.includes('pular recapitulação') ||
+        combined.includes('pular recapitulacao') ||
+        combined.includes('saltar abertura') ||
+        combined.includes('saltar introdução') ||
+        combined.includes('saltar resumo') ||
         combined.includes('skip intro') ||
         combined.includes('skip recap') ||
         (combined.startsWith('pular') && !combined.includes('episódio') && !combined.includes('episodio')) ||

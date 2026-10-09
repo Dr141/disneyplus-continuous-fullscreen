@@ -8,6 +8,17 @@
 (function () {
   'use strict';
 
+  // Validação estrita de domínio: garante execução exclusiva no Disney+
+  function isDisneyPlusDomain() {
+    const hostname = window.location.hostname.toLowerCase();
+    return hostname === 'disneyplus.com' || hostname.endsWith('.disneyplus.com');
+  }
+
+  // Aborta imediatamente se não estiver no domínio oficial do Disney+
+  if (!isDisneyPlusDomain()) {
+    return;
+  }
+
   console.log('[Disney+ Continuous Fullscreen] Script injetado no contexto MAIN inicializado.');
 
   // Configuração padrão
@@ -40,15 +51,19 @@
 
   let allowExplicitExit = false;
 
-  // Função auxiliar para checar se estamos em rota de vídeo
+  // Função auxiliar para checar se estamos em rota de vídeo do Disney+
   function isPlaybackRoute() {
+    if (!isDisneyPlusDomain()) return false;
     const path = window.location.pathname;
-    return path.includes('/play/') || path.includes('/video/') || !!document.querySelector('video');
+    const isPlayerPath = path.includes('/play/') || path.includes('/video/');
+    const hasPlayerElement = !!document.querySelector('.btm-media-client, [data-testid="video-player"], [data-testid="playback-container"], .web-player');
+    const hasVideo = !!document.querySelector('video');
+    return isPlayerPath || (hasPlayerElement && hasVideo);
   }
 
   // 1. Intercepta chamadas de requestFullscreen
   Element.prototype.requestFullscreen = function (...args) {
-    if (!settings.continuousFullscreen) {
+    if (!isDisneyPlusDomain() || !settings.continuousFullscreen) {
       return originalRequestFullscreen.apply(this, args);
     }
 
@@ -71,7 +86,7 @@
 
   // 2. Intercepta chamadas de exitFullscreen
   Document.prototype.exitFullscreen = function (...args) {
-    if (!settings.continuousFullscreen) {
+    if (!isDisneyPlusDomain() || !settings.continuousFullscreen) {
       return originalExitFullscreen.apply(this, args);
     }
 
