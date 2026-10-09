@@ -23,6 +23,7 @@
 
   // Configuração padrão
   let settings = {
+    extensionEnabled: true,
     continuousFullscreen: true
   };
 
@@ -53,7 +54,7 @@
 
   // Função auxiliar para checar se estamos em rota de vídeo do Disney+
   function isPlaybackRoute() {
-    if (!isDisneyPlusDomain()) return false;
+    if (!isDisneyPlusDomain() || !settings.extensionEnabled) return false;
     const path = window.location.pathname;
     const isPlayerPath = path.includes('/play/') || path.includes('/video/');
     const hasPlayerElement = !!document.querySelector('.btm-media-client, [data-testid="video-player"], [data-testid="playback-container"], .web-player');
@@ -63,7 +64,7 @@
 
   // 1. Intercepta chamadas de requestFullscreen
   Element.prototype.requestFullscreen = function (...args) {
-    if (!isDisneyPlusDomain() || !settings.continuousFullscreen) {
+    if (!isDisneyPlusDomain() || !settings.extensionEnabled || !settings.continuousFullscreen) {
       return originalRequestFullscreen.apply(this, args);
     }
 
@@ -86,7 +87,7 @@
 
   // 2. Intercepta chamadas de exitFullscreen
   Document.prototype.exitFullscreen = function (...args) {
-    if (!isDisneyPlusDomain() || !settings.continuousFullscreen) {
+    if (!isDisneyPlusDomain() || !settings.extensionEnabled || !settings.continuousFullscreen) {
       return originalExitFullscreen.apply(this, args);
     }
 
@@ -104,6 +105,7 @@
 
   // 3. Monitora intenções explícitas de saída por clique em botões de fechar/voltar
   document.addEventListener('click', (event) => {
+    if (!settings.extensionEnabled) return;
     const target = event.target;
     if (!target) return;
 
@@ -127,6 +129,7 @@
 
   // Monitora tecla ESC para garantir liberação imediata
   window.addEventListener('keydown', (event) => {
+    if (!settings.extensionEnabled) return;
     if (event.key === 'Escape') {
       allowExplicitExit = true;
       setTimeout(() => {

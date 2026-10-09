@@ -20,11 +20,9 @@
     return;
   }
 
-  // Adiciona classe de escopo na raiz para que o styles.css funcione exclusivamente nesta extensão no Disney+
-  document.documentElement.classList.add('dplus-active');
-
   // Configurações padrão
   let settings = {
+    extensionEnabled: true,
     continuousFullscreen: true,
     enableKeyF: true,
     enableDblClick: true,
@@ -32,11 +30,23 @@
     autoSkipIntro: true
   };
 
+  // Aplica classe de escopo de estilos conforme o status da extensão
+  function applyStylesState() {
+    if (settings.extensionEnabled) {
+      document.documentElement.classList.add('dplus-active');
+    } else {
+      document.documentElement.classList.remove('dplus-active');
+      showCursor();
+      clearTimeout(idleTimer);
+    }
+  }
+
   // Carrega configurações do chrome.storage
   function loadSettings() {
     chrome.storage.sync.get(settings, (items) => {
       if (items) {
         settings = Object.assign(settings, items);
+        applyStylesState();
         notifyInjectScript();
       }
     });
@@ -59,6 +69,7 @@
       for (const [key, change] of Object.entries(changes)) {
         settings[key] = change.newValue;
       }
+      applyStylesState();
       if (!settings.hideCursorOnIdle) {
         showCursor();
         clearTimeout(idleTimer);
@@ -71,7 +82,7 @@
 
   // Verifica se o usuário está assistindo a um vídeo no Disney+
   function isPlaybackRoute() {
-    if (!isDisneyPlusDomain()) return false;
+    if (!isDisneyPlusDomain() || !settings.extensionEnabled) return false;
     const path = window.location.pathname;
     const isPlayerPath = path.includes('/play/') || path.includes('/video/');
     const hasPlayerElement = !!document.querySelector('.btm-media-client, [data-testid="video-player"], [data-testid="playback-container"], .web-player');
@@ -94,7 +105,7 @@
 
   // 1. Atalho Tecla 'F'
   window.addEventListener('keydown', (event) => {
-    if (!settings.enableKeyF) return;
+    if (!settings.extensionEnabled || !settings.enableKeyF) return;
 
     // Ignora se estiver digitando em campo de texto
     const target = event.target;
@@ -110,7 +121,7 @@
 
   // 2. Duplo clique para alternar tela cheia
   document.addEventListener('dblclick', (event) => {
-    if (!settings.enableDblClick || !isPlaybackRoute()) return;
+    if (!settings.extensionEnabled || !settings.enableDblClick || !isPlaybackRoute()) return;
 
     const target = event.target;
     // Se o clique foi no vídeo ou no container do player
@@ -128,7 +139,7 @@
   let lastVideoElement = null;
 
   const observer = new MutationObserver(() => {
-    if (!isPlaybackRoute()) return;
+    if (!settings.extensionEnabled || !isPlaybackRoute()) return;
 
     if (settings.autoSkipIntro) {
       checkAndSkipIntro();
@@ -164,7 +175,7 @@
   }
 
   function hideCursor() {
-    if (settings.hideCursorOnIdle && isPlaybackRoute()) {
+    if (settings.extensionEnabled && settings.hideCursorOnIdle && isPlaybackRoute()) {
       document.documentElement.classList.add('dplus-cursor-hidden');
     }
   }
@@ -173,7 +184,7 @@
     showCursor();
     clearTimeout(idleTimer);
 
-    if (settings.hideCursorOnIdle && isPlaybackRoute()) {
+    if (settings.extensionEnabled && settings.hideCursorOnIdle && isPlaybackRoute()) {
       idleTimer = setTimeout(hideCursor, IDLE_TIMEOUT_MS);
     }
   }
@@ -204,7 +215,7 @@
   let lastSkipTime = 0;
 
   function checkAndSkipIntro() {
-    if (!isDisneyPlusDomain() || !settings.autoSkipIntro || !isPlaybackRoute()) return;
+    if (!isDisneyPlusDomain() || !settings.extensionEnabled || !settings.autoSkipIntro || !isPlaybackRoute()) return;
 
     const now = Date.now();
     // Previne cliques repetidos em rajada dentro de 1.5s
@@ -293,7 +304,7 @@
 
   // Intervalo leve para verificação periódica no player
   setInterval(() => {
-    if (settings.autoSkipIntro && isPlaybackRoute()) {
+    if (settings.extensionEnabled && settings.autoSkipIntro && isPlaybackRoute()) {
       checkAndSkipIntro();
     }
   }, 600);

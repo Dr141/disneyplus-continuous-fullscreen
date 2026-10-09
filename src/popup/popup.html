@@ -11,12 +11,23 @@
       <img class="icon-badge" src="../../icons/icon48.png" alt="Logo">
       <div class="titles">
         <h1>Disney+ Fullscreen</h1>
-        <span class="subtitle">Modo Contínuo Ativo</span>
+        <span class="subtitle" id="headerSubtitle">Modo Contínuo Ativo</span>
       </div>
     </div>
   </div>
 
-  <div class="content">
+  <div class="master-card" id="masterCard">
+    <div class="option-info">
+      <label for="extensionEnabled" class="master-label">Extensão Ativa</label>
+      <span class="desc" id="masterDesc">Desative para pausar todas as funções</span>
+    </div>
+    <label class="switch switch-master">
+      <input type="checkbox" id="extensionEnabled">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="content" id="optionsContainer">
     <div class="option-row">
       <div class="option-info">
         <label for="continuousFullscreen">Tela Cheia Contínua</label>
@@ -73,9 +84,14 @@
     </div>
   </div>
 
+  <div class="actions-row">
+    <button type="button" id="btnDisableAll" class="btn-action btn-disable">Desativar Todas</button>
+    <button type="button" id="btnEnableAll" class="btn-action btn-enable">Ativar Todas</button>
+  </div>
+
   <div class="footer">
-    <span class="status-indicator"></span>
-    <span class="status-text">Pronto para maratonar séries</span>
+    <span class="status-indicator" id="statusIndicator"></span>
+    <span class="status-text" id="statusText">Pronto para maratonar séries</span>
   </div>
 
   <script src="popup.js"></script>
